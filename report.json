@@ -1,10 +1,10 @@
 {
- "run_utc": "2026-09-28T07:35:37.125064+00:00",
- "feed_items": 2237,
- "previous_items": null,
- "update_rows": 2237,
- "archive_rows": 0,
+ "run_utc": "2026-09-28T16:43:04.758373+00:00",
+ "feed_items": 2236,
+ "previous_items": 2237,
+ "update_rows": 2236,
+ "archive_rows": 1,
  "skipped_bad_rows": [],
- "on_sale": 444,
+ "on_sale": 443,
  "storefront": true
 }
