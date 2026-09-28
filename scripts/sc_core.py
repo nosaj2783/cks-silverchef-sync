@@ -38,7 +38,33 @@ def load_feed(path=None):
     prod = [r for r in rows if r.get('Title')]
     for p in prod:
         p['Title'] = re.sub(r'\s+', ' ', p['Title']).strip()
+    resolve_brands(prod)
     return prod
+
+
+SC_PLACEHOLDER_VENDOR = 'SilverChef AU'   # SC's own name on ~43 incomplete records (usually no subcategory/model)
+
+
+def resolve_brands(prod):
+    """Sets p['_brand'] on every row (decision 2026-09-29). Real vendor as-is; for the 'SilverChef AU' placeholder, the
+    LONGEST vendor used elsewhere in the feed that the title starts with ('Victoria Arduino' beats 'Victoria').
+    Casing = the feed's most common spelling, non-capitals preferred ('Rational' over 'RATIONAL'). No match ->
+    p['_brand'] = None and the item is HELD out of create files (never guessed from a bare first word)."""
+    from collections import Counter
+    spell = Counter(p['Vendor'].strip() for p in prod if p['Vendor'].strip() and p['Vendor'].strip() != SC_PLACEHOLDER_VENDOR)
+    best = {}
+    for v, n in spell.items():
+        k = v.lower(); cur = best.get(k)
+        if cur is None or (n, not v.isupper()) > (spell[cur], not cur.isupper()):
+            best[k] = v
+    for p in prod:
+        v = p['Vendor'].strip()
+        if v != SC_PLACEHOLDER_VENDOR:
+            p['_brand'] = v
+            continue
+        t = p['Title'].lower()
+        hits = [k for k in best if t.startswith(k + ' ')]
+        p['_brand'] = best[max(hits, key=len)] if hits else None
 
 
 def load_storefront():
@@ -79,7 +105,7 @@ def slug(s):
 
 def model_of(p):
     """SC `model`, minus a repeated brand (10/2,250: 'Giorik KB061WT' -> 'KB061WT')."""
-    m, v = p['Metafield: custom.model'].strip(), p['Vendor'].strip()
+    m, v = p['Metafield: custom.model'].strip(), (p.get('_brand') or p['Vendor']).strip()
     return m[len(v) + 1:] if v and m.lower().startswith(v.lower() + ' ') else m
 
 
@@ -170,6 +196,7 @@ def commercial(p, store):
 def product_row(p, rules, store):
     """Full CKS-shaped row for a NEW product (Ablestar Create)."""
     a = p['Handle']
+    brand = p.get('_brand') or p['Vendor']   # 'SilverChef AU' placeholder resolved by resolve_brands()
     ptype, leaves, mapped = classify(p, rules)
     w, d, h = p['Metafield: custom.width'], p['Metafield: custom.depth'], p['Metafield: custom.height']
     intro, feats, cond, _, net = split_body(p['Body (HTML)'])
@@ -177,15 +204,15 @@ def product_row(p, rules, store):
     c = commercial(p, store)
     tags = (['Category_Clearance and Used Equipment'] + [f'Category_{x}' for x in leaves] +
             [f'Final Category_{leaves[-1]}'] + FIXED_TAGS +
-            [f'Brand_{p["Vendor"]}'] + ([f'MPN_{model}'] if model else []) +   # no model in the SC feed -> no MPN_ tag, never a bare 'MPN_'
+            [f'Brand_{brand}'] + ([f'MPN_{model}'] if model else []) +   # no model in the SC feed -> no MPN_ tag, never a bare 'MPN_'
             [f'Product-Width_{w}', f'Product-Depth_{d}',
              f'Product-Height_{h}', f'Product-Dimensions_{w}(W) x {d}(D) x {h}(H)mm'])
     tags = [t.replace(',', ' ') for t in tags]          # Shopify splits tags on commas
     title = f'Used {p["Title"]} - {a}'
     return {
-        'Handle': slug(f'used-{p["Vendor"]}-{model}-{a}'),
+        'Handle': slug(f'used-{brand}-{model}-{a}'),
         'SKU': f'{a}{SKU_SUFFIX}', 'Title': title, 'Description': body_html(a, intro, feats, cond, w, d, h),
-        'Vendor': p['Vendor'], 'Type': ptype, 'Tags': ', '.join(tags), 'Status': 'draft',
+        'Vendor': brand, 'Type': ptype, 'Tags': ', '.join(tags), 'Status': 'draft',
         'Price': f'{c["price"]:.2f}', 'Compare-at Price': f'{c["compare"]:.2f}',   # Cost: added by build_new
         'Weight': c['weight'], 'Weight Unit': 'kg', 'Inventory Quantity': 1, 'Track Inventory': 'TRUE',
         'Continue Selling When Out of Stock': 'FALSE', 'Requires Shipping': 'TRUE', 'Taxable': 'TRUE',
@@ -195,7 +222,7 @@ def product_row(p, rules, store):
         # NO MPN / supplier metafields (Decision 2026-09-29: "don't map"): the MPN lives in the MPN_ tag only.
         # Never add a header called 'MPN' - Ablestar maps it to shopify--facts.mpn (^[a-zA-Z0-9]+$), which
         # rejected 5/10 creates on 2026-09-28.
-        'custom.brand': p['Vendor'],
+        'custom.brand': brand,
         # Decision 2026-09-29: MPN column is BACK for creates, routed MANUALLY in Ablestar to "Google: MPN"
         # (mm-google-shopping.mpn). Header is deliberately 'Google MPN', never plain 'MPN' (auto-maps to
         # shopify--facts.mpn). Blank when SC has no model - never derived from the title.
