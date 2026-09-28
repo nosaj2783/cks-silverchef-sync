@@ -21,7 +21,9 @@ jobs:
         with: { ref: gh-pages, path: site }
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - name: Build update + archive files
+      - name: Build update + archive files (+ daily Slack alert at 08:xx Sydney)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}   # repo secret; posts to one channel only
         run: python scripts/build_hourly.py --out site --state site/state.json
       - name: Publish
         run: |

@@ -121,6 +121,36 @@ def body_html(asset, intro, feats, cond, w, d, h):
             f'<p><strong>Asset Number:</strong> {e(asset)}</p>')
 
 
+def _clip(s, n):
+    """Cut at a word boundary to <= n chars (no trailing punctuation fragments)."""
+    if len(s) <= n:
+        return s
+    return s[:n + 1].rsplit(' ', 1)[0].rstrip(' ,;:-|')
+
+
+def seo_title(sc_title):
+    """'Used <Brand> <Model> <Type> | Commercial Kitchen Store' (asset number left out), <= 70 chars.
+    Drops the store suffix before it would truncate the product name."""
+    base = f'Used {sc_title}'
+    full = f'{base} | Commercial Kitchen Store'
+    return full if len(full) <= 70 else _clip(base, 70)
+
+
+def seo_description(sc_title, cond, w, d, h, power):
+    """<= 160 chars, built only from SC data: name, condition notes, dimensions, power."""
+    notes = (' (' + ', '.join(c.lower() for c in cond) + ')') if cond else ''
+    parts = [f'Used {sc_title}, SilverChef Certified Used{notes}.', f'{w}W x {d}D x {h}H mm.']
+    if power:
+        parts.append(f'{power}.')
+    parts.append('Buy from Commercial Kitchen Store.')
+    out = ''
+    for part in parts:                    # add whole sentences only, never a half sentence
+        if len((out + ' ' + part).strip()) > 160:
+            break
+        out = (out + ' ' + part).strip()
+    return out or _clip(parts[0], 160)
+
+
 def commercial(p, store):
     """Price / compare-at / shipping weight: the commercial fields updated hourly on existing items."""
     inc = float(p['Variant Price'])
@@ -147,7 +177,8 @@ def product_row(p, rules, store):
     c = commercial(p, store)
     tags = (['Category_Clearance and Used Equipment'] + [f'Category_{x}' for x in leaves] +
             [f'Final Category_{leaves[-1]}'] + FIXED_TAGS +
-            [f'Brand_{p["Vendor"]}', f'MPN_{model}', f'Product-Width_{w}', f'Product-Depth_{d}',
+            [f'Brand_{p["Vendor"]}'] + ([f'MPN_{model}'] if model else []) +   # no model in the SC feed -> no MPN_ tag, never a bare 'MPN_'
+            [f'Product-Width_{w}', f'Product-Depth_{d}',
              f'Product-Height_{h}', f'Product-Dimensions_{w}(W) x {d}(D) x {h}(H)mm'])
     tags = [t.replace(',', ' ') for t in tags]          # Shopify splits tags on commas
     title = f'Used {p["Title"]} - {a}'
@@ -161,6 +192,14 @@ def product_row(p, rules, store):
         'Images': '|'.join(u for u in p['images'].split('|') if u), 'Image Alt Text': title,
         'Width': w, 'Depth': d, 'Height': h, 'Product Dimensions': f'{w}W x {d}D x {h}Hmm',
         'Product Weight': f'{net:g}' if net else '', 'Power (global.power)': p['Metafield: custom.power'],
-        'MPN (global.mpn)': model, 'Brand (custom.brand)': p['Vendor'], 'Supplier (global.supplier)': 'SilverChef',
+        # NO MPN / supplier metafields (Decision 2026-09-29: "don't map"): the MPN lives in the MPN_ tag only.
+        # Never add a header called 'MPN' - Ablestar maps it to shopify--facts.mpn (^[a-zA-Z0-9]+$), which
+        # rejected 5/10 creates on 2026-09-28.
+        'custom.brand': p['Vendor'],
+        # Decision 2026-09-29: MPN column is BACK for creates, routed MANUALLY in Ablestar to "Google: MPN"
+        # (mm-google-shopping.mpn). Header is deliberately 'Google MPN', never plain 'MPN' (auto-maps to
+        # shopify--facts.mpn). Blank when SC has no model - never derived from the title.
+        'Google MPN': model,
+        'SEO Meta Title': seo_title(p['Title']), 'SEO Meta Description': seo_description(p['Title'], cond, w, d, h, p['Metafield: custom.power']),
         '_mapped': mapped, '_subcategory': p['Metafield: custom.subcategory'],
     }
