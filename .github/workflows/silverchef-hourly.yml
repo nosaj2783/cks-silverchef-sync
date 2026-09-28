@@ -1,0 +1,33 @@
+# GitHub Actions workflow for the HOURLY half of cks-silverchef-sync.
+# Copy to .github/workflows/ in the sync repo (repo layout: scripts/, config/, this file).
+# Needs NO store credentials: it reads SilverChef's public feed + storefront and publishes
+# update.csv / archive.csv / report.json to the gh-pages branch (GitHub Pages), which is the
+# public-by-link URL Ablestar Inventory Sync fetches. state.json rides along on gh-pages.
+name: silverchef-hourly
+on:
+  schedule:
+    - cron: '5 * * * *'        # hourly at :05 UTC (SC feed refreshes ~:30; Ablestar jobs at :20 / :40)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: { group: silverchef-hourly, cancel-in-progress: false }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { ref: gh-pages, path: site }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Build update + archive files
+        run: python scripts/build_hourly.py --out site --state site/state.json
+      - name: Publish
+        run: |
+          cd site
+          git config user.name  "silverchef-sync"
+          git config user.email "silverchef-sync@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "sync $(date -u +%FT%TZ)"
+          git push
