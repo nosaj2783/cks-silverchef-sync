@@ -1,16 +1,16 @@
 {
- "run_utc": "2026-10-03T11:33:07.170496+00:00",
- "feed_items": 2184,
+ "run_utc": "2026-10-03T16:09:16.987476+00:00",
+ "feed_items": 2183,
  "previous_items": 2184,
- "update_rows": 2184,
- "archive_rows": 146,
+ "update_rows": 2183,
+ "archive_rows": 147,
  "frozen_sold_out_on_cks": [],
- "cks_storefront": "FAILED (Command '['curl', '-sfL', '-A', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36', 'https://commercialkitchenstore.com.au/collections/refurbished-refrigerator-clearance/products.json?limit=250&page=1']' returned non-zero exit status 22.) - reused last frozen list",
- "cks_sc_variants_seen": null,
+ "cks_storefront": "ok",
+ "cks_sc_variants_seen": 0,
  "new_since_last_alert": 89,
  "alert": null,
  "baseline_run": false,
  "skipped_bad_rows": [],
- "on_sale": 404,
+ "on_sale": 403,
  "storefront": true
 }
