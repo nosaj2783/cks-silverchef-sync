@@ -1,5 +1,5 @@
 {
- "run_utc": "2026-10-09T16:06:31.623494+00:00",
+ "run_utc": "2026-10-09T21:36:06.899683+00:00",
  "feed_items": 2147,
  "previous_items": 2147,
  "update_rows": 2147,
@@ -8,7 +8,7 @@
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 0,
  "new_since_last_alert": 16,
- "alert": null,
+ "alert": "sent 200",
  "baseline_run": false,
  "skipped_bad_rows": [],
  "on_sale": 389,
