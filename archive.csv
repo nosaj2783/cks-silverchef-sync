@@ -11,6 +11,7 @@ SKU,Status
 762837-SC,archived
 763232-SC,archived
 764054-SC,archived
+765477-SC,archived
 767405-SC,archived
 768091-SC,archived
 770948-SC,archived
@@ -31,11 +32,13 @@ SKU,Status
 786209-SC,archived
 786537-SC,archived
 786552-SC,archived
+787264-SC,archived
 788451-SC,archived
 788663-SC,archived
 790434-SC,archived
 796430-SC,archived
 801482-SC,archived
+801576-SC,archived
 802047-SC,archived
 804517-SC,archived
 804645-SC,archived
@@ -61,10 +64,12 @@ SKU,Status
 817631-SC,archived
 818031-SC,archived
 818093-SC,archived
+818632-SC,archived
 818651-SC,archived
 818804-SC,archived
 819488-SC,archived
 820568-SC,archived
+821237-SC,archived
 824702-SC,archived
 825009-SC,archived
 825722-SC,archived
@@ -83,6 +88,7 @@ SKU,Status
 831268-SC,archived
 831420-SC,archived
 831645-SC,archived
+831650-SC,archived
 831851-SC,archived
 832780-SC,archived
 832867-SC,archived
@@ -97,6 +103,7 @@ SKU,Status
 835530-SC,archived
 836048-SC,archived
 836430-SC,archived
+836513-SC,archived
 836842-SC,archived
 837841-SC,archived
 838143-SC,archived
@@ -132,6 +139,7 @@ SKU,Status
 849093-SC,archived
 849179-SC,archived
 849734-SC,archived
+849969-SC,archived
 850390-SC,archived
 850806-SC,archived
 850837-SC,archived
@@ -187,6 +195,7 @@ SKU,Status
 865169-SC,archived
 865394-SC,archived
 865482-SC,archived
+865573-SC,archived
 865575-SC,archived
 865599-SC,archived
 865602-SC,archived
@@ -205,6 +214,7 @@ SKU,Status
 868628-SC,archived
 868666-SC,archived
 868803-SC,archived
+868804-SC,archived
 868821-SC,archived
 869347-SC,archived
 869500-SC,archived
@@ -235,6 +245,7 @@ SKU,Status
 878624-SC,archived
 878639-SC,archived
 878899-SC,archived
+879545-SC,archived
 879842-SC,archived
 879917-SC,archived
 880318-SC,archived
@@ -263,6 +274,7 @@ SKU,Status
 887561-SC,archived
 887836-SC,archived
 887893-SC,archived
+888024-SC,archived
 888382-SC,archived
 888481-SC,archived
 890317-SC,archived
@@ -274,7 +286,6 @@ SKU,Status
 891455-SC,archived
 891460-SC,archived
 891510-SC,archived
-891895-SC,archived
 891901-SC,archived
 891902-SC,archived
 891908-SC,archived
@@ -345,5 +356,6 @@ SKU,Status
 936717-SC,archived
 937210-SC,archived
 940421-SC,archived
+941449-SC,archived
 silverchef-test-asset-dh-SC,archived
 sndtest-SC,archived
