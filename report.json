@@ -1,16 +1,16 @@
 {
- "run_utc": "2026-10-21T04:32:20.173524+00:00",
- "feed_items": 2207,
- "previous_items": 2200,
- "update_rows": 2207,
- "archive_rows": 423,
+ "run_utc": "2026-10-21T10:01:25.179550+00:00",
+ "feed_items": 2210,
+ "previous_items": 2207,
+ "update_rows": 2210,
+ "archive_rows": 426,
  "frozen_sold_out_on_cks": [],
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 0,
- "new_since_last_alert": 211,
+ "new_since_last_alert": 216,
  "alert": null,
  "baseline_run": false,
  "skipped_bad_rows": [],
- "on_sale": 373,
+ "on_sale": 374,
  "storefront": true
 }
