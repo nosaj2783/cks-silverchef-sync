@@ -14,6 +14,8 @@ UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
 
 GST = 1.1                 # SC prices are inc-GST; CKS stores ex-GST (shop.taxes_included = false)
 CUBIC_RATE = 325          # shipping weight = product m3 x 325, never below SC net kg (shipping_class_1)
+WEIGHT_FACTOR = 2        # then x2 for freight safety margin (CKS sales, 2026-10-14)
+WEIGHT_CAP = 999         # CKS max: Google's feed rejects >= 1,000 kg
 SKU_SUFFIX = '-SC'        # Jan-2025 CKS SilverChef draft convention
 
 FIXED_TAGS = ['2nds', 'Condition_Used', 'SC-USED', 'Supplier_SilverChef', 'shipping_class_1']
@@ -188,7 +190,7 @@ def commercial(p, store):
     compare = round(was / GST, 2) if was > inc else price
     w, d, h = (int(p[f'Metafield: custom.{k}']) for k in ('width', 'depth', 'height'))
     _, _, _, _, net = split_body(p['Body (HTML)'])
-    weight = max(1, round(max(w * d * h / 1e9 * CUBIC_RATE, net or 0)))
+    weight = min(WEIGHT_CAP, WEIGHT_FACTOR * max(1, round(max(w * d * h / 1e9 * CUBIC_RATE, net or 0))))
     return {'price': price, 'compare': compare, 'weight': weight,
             'net_kg': net, 'on_sale': was > inc, 'store_matched': sc is not None}
 
