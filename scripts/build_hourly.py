@@ -15,6 +15,11 @@ NEW-ARRIVALS ALERT (decision 2026-09-29): each asset's first appearance in the S
 at NOTIFY_HOUR_SYD Sydney time) the arrivals since the last alert are posted to Slack via $SLACK_WEBHOOK_URL, only
 when there are any. Creation itself stays on demand in Claude. The first run baselines the existing backlog.
 
+SOLD ALERT (decision 2026-10-28): a SilverChef item that is LIVE and buyable on CKS (published, available) but has left
+the SC feed was most likely sold by SilverChef, so CKS could sell stock that no longer exists. Posted to Slack on the
+first run that sees it (any hour), then repeated in every daily alert while it stays live. Alerts only: archiving stays
+with Ablestar #2 / a human. A failed CKS read skips the check (never a false all-clear in the report).
+
   python3 build_hourly.py --out <dir> --state <state.json> [--feed <csv>] [--no-storefront]
                           [--cks-json <file>] [--force-notify] [--dry-notify]
 Exit codes: 0 ok · 2 feed guard tripped (outputs untouched) · 3 SC storefront pull failed (outputs untouched)
@@ -43,8 +48,9 @@ def write_csv(path, head, rows):
 
 
 def cks_sold_out():
-    """-> set of SC SKUs (…-SC) that are published on CKS and NOT available (sold out). Raises on any fetch error."""
-    out, seen = set(), 0
+    """-> (SC SKUs published on CKS and NOT available (sold out), count seen, {SKU: (title, handle)} published AND
+    available). Raises on any fetch error."""
+    out, seen, live = set(), 0, {}
     for h in REFURB:
         for page in range(1, 41):
             prods = json.loads(sc.curl(f'{CKS}/collections/{h}/products.json?limit=250&page={page}', 60))['products']
@@ -57,19 +63,30 @@ def cks_sold_out():
                         seen += 1
                         if not v.get('available'):
                             out.add(sku)
+                        else:
+                            live[sku] = (p['title'], p['handle'])
             time.sleep(0.3)
-    return out, seen
+    return out, seen, live
 
 
-def notify(new_rows, dry=False):
-    """Post the day's new SC arrivals to Slack. Returns a status string; never raises (an alert must not break a sync)."""
+def notify(new_rows, dry=False, sold=()):
+    """Post sold-on-SC-but-live-on-CKS items (first) and the day's new SC arrivals to Slack. Returns a status string;
+    never raises (an alert must not break a sync)."""
     url = os.environ.get('SLACK_WEBHOOK_URL', '').strip()
-    top = sorted(new_rows, key=lambda r: -r['price'])[:15]
-    lines = [f"*{len(new_rows)} new SilverChef item(s)* in the feed since the last alert, not yet created on CKS.",
-             "Say *\"SilverChef new items\"* to Claude to build the checked create file.", ""]
-    lines += [f"• `{r['sku']}` {r['title']} (${r['price']:,.2f} ex-GST, {r['city']})" for r in top]
-    if len(new_rows) > len(top):
-        lines.append(f"…and {len(new_rows) - len(top)} more")
+    lines = []
+    if sold:
+        lines += [f":rotating_light: *{len(sold)} SilverChef item(s) LIVE on CKS but gone from SilverChef's feed* "
+                  "(probably sold there). Archive on CKS, or say *\"SilverChef sold check\"* to Claude.", ""]
+        lines += [f"• `{sku}` {title} - {CKS}/products/{handle}" for sku, title, handle in sold]
+        if new_rows:
+            lines.append("")
+    if new_rows:
+        top = sorted(new_rows, key=lambda r: -r['price'])[:15]
+        lines += [f"*{len(new_rows)} new SilverChef item(s)* in the feed since the last alert, not yet created on CKS.",
+                  "Say *\"SilverChef new items\"* to Claude to build the checked create file.", ""]
+        lines += [f"• `{r['sku']}` {r['title']} (${r['price']:,.2f} ex-GST, {r['city']})" for r in top]
+        if len(new_rows) > len(top):
+            lines.append(f"…and {len(new_rows) - len(top)} more")
     text = '\n'.join(lines)
     if dry or not url:
         print(('DRY' if dry else 'NO SLACK_WEBHOOK_URL') + ' - message would be:\n' + text)
@@ -93,7 +110,8 @@ def main():
     out, state_p = pathlib.Path(a.out), pathlib.Path(a.state)
     out.mkdir(parents=True, exist_ok=True)
     state = json.loads(state_p.read_text()) if state_p.exists() else {}
-    for k, v in (('seen', {}), ('first_seen', {}), ('frozen', []), ('last_count', None), ('last_notified', None)):
+    for k, v in (('seen', {}), ('first_seen', {}), ('frozen', []), ('last_count', None), ('last_notified', None),
+                 ('sold_alerted', [])):
         state.setdefault(k, v)
     now = dt.datetime.now(dt.timezone.utc)
 
@@ -111,12 +129,13 @@ def main():
     # FREEZE: sold out on CKS -> no updates. A failed read keeps the last known list (never unfreezes).
     try:
         if a.cks_json:
-            sold_out, cks_seen = set(json.load(open(a.cks_json))), -1
+            sold_out, cks_seen, cks_live = set(json.load(open(a.cks_json))), -1, {}
         else:
-            sold_out, cks_seen = cks_sold_out()
+            sold_out, cks_seen, cks_live = cks_sold_out()
         cks_read = 'ok'
     except Exception as e:
-        sold_out, cks_seen, cks_read = set(state['frozen']), None, f'FAILED ({e}) - reused last frozen list'
+        sold_out, cks_seen, cks_live = set(state['frozen']), None, None
+        cks_read = f'FAILED ({e}) - reused last frozen list'
         print(f'CKS STOREFRONT: {cks_read}', file=sys.stderr)
 
     upd, current, bad, frozen = [], set(), [], []
@@ -140,6 +159,12 @@ def main():
     for x in [x for x, t in seen.items() if dt.datetime.fromisoformat(t) < cutoff]:
         del seen[x]
 
+    # SOLD ALERT: buyable on CKS, gone from the SC feed. None = CKS unreadable this run (check skipped).
+    sold_live = None if cks_live is None else sorted(
+        (sku, t, h) for sku, (t, h) in cks_live.items() if sku[:-len(sc.SKU_SUFFIX)] not in current)
+    alerted = set(state['sold_alerted'])
+    new_sold = [r for r in (sold_live or []) if r[0] not in alerted]
+
     # NEW ARRIVALS: first appearance in the SC feed. First-ever run baselines the backlog (no alert for it).
     first = state['first_seen']
     baseline = not first
@@ -155,20 +180,28 @@ def main():
     syd = now.astimezone(ZoneInfo('Australia/Sydney'))
     due = a.force_notify or (syd.hour == NOTIFY_HOUR_SYD and syd.date().isoformat() != state.get('last_notify_day'))
     if due:
-        if arrivals:
+        if arrivals or sold_live:
             notified = notify([{'sku': p['Handle'] + sc.SKU_SUFFIX, 'title': p['Title'], 'price': round(float(p['Variant Price']) / sc.GST, 2),
-                                'city': p['Metafield: custom.city'].title()} for p in arrivals], dry=a.dry_notify)
+                                'city': p['Metafield: custom.city'].title()} for p in arrivals], dry=a.dry_notify,
+                              sold=sold_live or ())
         else:
             notified = 'nothing new - silent'
         if not a.dry_notify and not (notified or '').startswith('failed'):
             state['last_notified'] = now.isoformat()   # a failed post is retried next day with the same items
             state['last_notify_day'] = syd.date().isoformat()
+    elif new_sold:                                      # a sale can't wait for 8 am: alert on first sight
+        notified = notify([], dry=a.dry_notify, sold=new_sold)
+    posted = notified is not None and not notified.startswith(('failed', 'no-webhook', 'dry', 'nothing'))
+    if sold_live is not None:                           # remember what was posted; forget items no longer live
+        live_skus = {r[0] for r in sold_live}
+        state['sold_alerted'] = sorted((alerted | ({r[0] for r in sold_live} if posted else set())) & live_skus)
 
     write_csv(out / 'update.csv', ['SKU', 'Price', 'Compare-at Price', 'Weight'], upd)
     write_csv(out / 'archive.csv', ['SKU', 'Status'], [[x + sc.SKU_SUFFIX, 'archived'] for x in gone])
     report = {'run_utc': now.isoformat(), 'feed_items': n, 'previous_items': prev, 'update_rows': len(upd),
               'archive_rows': len(gone), 'frozen_sold_out_on_cks': sorted(frozen), 'cks_storefront': cks_read,
               'cks_sc_variants_seen': cks_seen, 'new_since_last_alert': len(arrivals), 'alert': notified,
+              'sold_on_sc_live_on_cks': None if sold_live is None else [r[0] for r in sold_live],
               'baseline_run': baseline, 'skipped_bad_rows': bad,
               'on_sale': sum(1 for r in upd if float(r[2]) > float(r[1])), 'storefront': store is not None}
     (out / 'report.json').write_text(json.dumps(report, indent=1))
