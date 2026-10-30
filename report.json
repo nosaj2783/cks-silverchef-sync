@@ -1,14 +1,14 @@
 {
- "run_utc": "2026-10-30T06:59:47.338187+00:00",
+ "run_utc": "2026-10-30T14:00:25.061977+00:00",
  "feed_items": 2223,
- "previous_items": 2219,
+ "previous_items": 2223,
  "update_rows": 2223,
- "archive_rows": 482,
+ "archive_rows": 481,
  "frozen_sold_out_on_cks": [],
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 324,
  "new_since_last_alert": 47,
- "alert": "sent 200",
+ "alert": null,
  "sold_on_sc_live_on_cks": [
   "779688-SC",
   "840939-SC",
