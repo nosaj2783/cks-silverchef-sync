@@ -1,15 +1,16 @@
 {
- "run_utc": "2026-11-03T06:33:59.005533+00:00",
- "feed_items": 2301,
- "previous_items": 2232,
- "update_rows": 2301,
- "archive_rows": 448,
+ "run_utc": "2026-11-03T14:59:41.360592+00:00",
+ "feed_items": 2330,
+ "previous_items": 2301,
+ "update_rows": 2330,
+ "archive_rows": 449,
  "frozen_sold_out_on_cks": [],
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 1208,
- "new_since_last_alert": 106,
+ "new_since_last_alert": 136,
  "alert": "sent 200",
  "sold_on_sc_live_on_cks": [
+  "784417-SC",
   "818031-SC",
   "832273-SC",
   "834680-SC",
@@ -18,11 +19,10 @@
   "869121-SC",
   "870158-SC",
   "881065-SC",
-  "883400-SC",
-  "936948-SC"
+  "883400-SC"
  ],
  "baseline_run": false,
  "skipped_bad_rows": [],
- "on_sale": 430,
+ "on_sale": 431,
  "storefront": true
 }
