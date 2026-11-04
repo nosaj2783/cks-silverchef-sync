@@ -1,6 +1,7 @@
 SKU,Status
 39a-5092-1249230-SC,archived
 3pa-3841-btgab9-1710-0002-SC,archived
+3pa-5092-1249230-SC,archived
 715537-SC,archived
 718410-SC,archived
 722946-SC,archived
@@ -180,7 +181,6 @@ SKU,Status
 848744-SC,archived
 849032-SC,archived
 849093-SC,archived
-849179-SC,archived
 849192-SC,archived
 849734-SC,archived
 849969-SC,archived
@@ -212,7 +212,6 @@ SKU,Status
 859543-SC,archived
 859697-SC,archived
 860069-SC,archived
-860116-SC,archived
 860251-SC,archived
 860386-SC,archived
 860508-SC,archived
@@ -374,7 +373,6 @@ SKU,Status
 898024-SC,archived
 898125-SC,archived
 898176-SC,archived
-898177-SC,archived
 898601-SC,archived
 898637-SC,archived
 898701-SC,archived
@@ -382,6 +380,7 @@ SKU,Status
 900393-SC,archived
 900483-SC,archived
 900962-SC,archived
+901538-SC,archived
 901748-SC,archived
 902950-SC,archived
 903044-SC,archived
