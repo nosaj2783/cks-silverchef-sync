@@ -1,14 +1,14 @@
 {
- "run_utc": "2026-11-10T16:58:25.116663+00:00",
+ "run_utc": "2026-11-10T22:18:20.797249+00:00",
  "feed_items": 2341,
- "previous_items": 2344,
+ "previous_items": 2341,
  "update_rows": 2341,
- "archive_rows": 470,
+ "archive_rows": 469,
  "frozen_sold_out_on_cks": [],
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 1982,
  "new_since_last_alert": 108,
- "alert": "sent 200",
+ "alert": null,
  "sold_on_sc_live_on_cks": [
   "773171-SC",
   "785705-SC",
