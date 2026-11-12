@@ -12,7 +12,8 @@ collections' products.json 'available' flag) - no login. Drafts can't sell, so p
 If CKS can't be read, the last known frozen list is reused: an item is never unfrozen by a failed read.
 
 NEW-ARRIVALS ALERT (decision 2026-09-29): each asset's first appearance in the SC feed is recorded; once a day (the run
-at NOTIFY_HOUR_SYD Sydney time) the arrivals since the last alert are posted to Slack via $SLACK_WEBHOOK_URL, only
+on or after NOTIFY_HOUR_SYD Sydney time; GitHub runs the hourly cron only ~3-4x a day, so an
+'only in that hour' test skipped most days - fixed 2026-11-12) the arrivals since the last alert are posted to Slack via $SLACK_WEBHOOK_URL, only
 when there are any. Creation itself stays on demand in Claude. The first run baselines the existing backlog.
 
 SOLD ALERT (decision 2026-10-28): a SilverChef item that is LIVE and buyable on CKS (published, available) but has left
@@ -31,7 +32,7 @@ import sc_core as sc
 ARCHIVE_DAYS = 30
 MIN_ROWS = 500          # the all-AU feed carried 2,250 on 2026-09-22
 MAX_SHRINK = 0.20       # >20% fewer items than last run = treat as a broken feed
-NOTIFY_HOUR_SYD = 8     # daily alert on the first run in this Sydney hour
+NOTIFY_HOUR_SYD = 8     # daily alert on the first run at or after this Sydney hour
 CKS = 'https://commercialkitchenstore.com.au'
 REFURB = ['refurbished-refrigerator-clearance', 'refurbished-benchtop-equipment-clearance',
           'refurbished-cooking-equipment-clearance', 'refurbished-ovens-clearance', 'refurbished-freezer-clearance',
@@ -178,7 +179,7 @@ def main():
     arrivals = [p for p in feed if first[p['Handle']] != 'baseline' and dt.datetime.fromisoformat(first[p['Handle']]) > since]
     notified = None
     syd = now.astimezone(ZoneInfo('Australia/Sydney'))
-    due = a.force_notify or (syd.hour == NOTIFY_HOUR_SYD and syd.date().isoformat() != state.get('last_notify_day'))
+    due = a.force_notify or (syd.hour >= NOTIFY_HOUR_SYD and syd.date().isoformat() != state.get('last_notify_day'))
     if due:
         if arrivals or sold_live:
             notified = notify([{'sku': p['Handle'] + sc.SKU_SUFFIX, 'title': p['Title'], 'price': round(float(p['Variant Price']) / sc.GST, 2),
