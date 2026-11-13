@@ -3,7 +3,6 @@ SKU,Status
 3pa-3841-btgab9-1710-0002-SC,archived
 3pa-5092-1249230-SC,archived
 715537-SC,archived
-718410-SC,archived
 731484-SC,archived
 731731-SC,archived
 737582-SC,archived
@@ -19,6 +18,7 @@ SKU,Status
 765477-SC,archived
 767695-SC,archived
 768214-SC,archived
+771781-SC,archived
 773012-SC,archived
 773171-SC,archived
 773172-SC,archived
@@ -38,7 +38,6 @@ SKU,Status
 782584-SC,archived
 784417-SC,archived
 784865-SC,archived
-785251-SC,archived
 785705-SC,archived
 785708-SC,archived
 786173-SC,archived
@@ -60,7 +59,6 @@ SKU,Status
 800069-SC,archived
 800159-SC,archived
 800505-SC,archived
-800575-SC,archived
 801576-SC,archived
 802659-SC,archived
 802980-SC,archived
@@ -89,7 +87,6 @@ SKU,Status
 813705-SC,archived
 813995-SC,archived
 814188-SC,archived
-814448-SC,archived
 818031-SC,archived
 818632-SC,archived
 819036-SC,archived
@@ -100,6 +97,7 @@ SKU,Status
 820832-SC,archived
 821232-SC,archived
 821237-SC,archived
+821321-SC,archived
 821603-SC,archived
 821624-SC,archived
 822296-SC,archived
@@ -122,7 +120,6 @@ SKU,Status
 829252-SC,archived
 829277-SC,archived
 829279-SC,archived
-829346-SC,archived
 829723-SC,archived
 829724-SC,archived
 829797-SC,archived
@@ -130,8 +127,8 @@ SKU,Status
 830392-SC,archived
 830504-SC,archived
 830631-SC,archived
+831145-SC,archived
 831148-SC,archived
-831265-SC,archived
 831650-SC,archived
 831665-SC,archived
 831721-SC,archived
@@ -153,6 +150,7 @@ SKU,Status
 835669-SC,archived
 835755-SC,archived
 835780-SC,archived
+835781-SC,archived
 836032-SC,archived
 836513-SC,archived
 836747-SC,archived
@@ -161,9 +159,9 @@ SKU,Status
 838879-SC,archived
 838914-SC,archived
 839014-SC,archived
-839018-SC,archived
 839370-SC,archived
 840122-SC,archived
+840796-SC,archived
 840939-SC,archived
 840946-SC,archived
 841235-SC,archived
@@ -183,6 +181,7 @@ SKU,Status
 845391-SC,archived
 845564-SC,archived
 845889-SC,archived
+846366-SC,archived
 846467-SC,archived
 847482-SC,archived
 848014-SC,archived
@@ -218,7 +217,6 @@ SKU,Status
 856314-SC,archived
 856341-SC,archived
 856450-SC,archived
-857940-SC,archived
 858052-SC,archived
 858053-SC,archived
 858091-SC,archived
@@ -240,7 +238,6 @@ SKU,Status
 861339-SC,archived
 861620-SC,archived
 861796-SC,archived
-861884-SC,archived
 861942-SC,archived
 862142-SC,archived
 862674-SC,archived
@@ -303,6 +300,7 @@ SKU,Status
 874321-SC,archived
 874328-SC,archived
 874349-SC,archived
+874400-SC,archived
 874401-SC,archived
 874500-SC,archived
 874617-SC,archived
@@ -323,9 +321,9 @@ SKU,Status
 878183-SC,archived
 878272-SC,archived
 878420-SC,archived
-878639-SC,archived
 878658-SC,archived
 878771-SC,archived
+879010-SC,archived
 879140-SC,archived
 879374-SC,archived
 879545-SC,archived
@@ -356,6 +354,7 @@ SKU,Status
 883400-SC,archived
 883698-SC,archived
 883867-SC,archived
+884269-SC,archived
 884437-SC,archived
 884584-SC,archived
 884752-SC,archived
@@ -363,7 +362,6 @@ SKU,Status
 886049-SC,archived
 886082-SC,archived
 886478-SC,archived
-886481-SC,archived
 887001-SC,archived
 887023-SC,archived
 887927-SC,archived
@@ -381,7 +379,7 @@ SKU,Status
 891468-SC,archived
 891474-SC,archived
 891481-SC,archived
-891510-SC,archived
+891568-SC,archived
 891895-SC,archived
 892519-SC,archived
 892644-SC,archived
@@ -420,7 +418,6 @@ SKU,Status
 901748-SC,archived
 902950-SC,archived
 903044-SC,archived
-903107-SC,archived
 903552-SC,archived
 903554-SC,archived
 903875-SC,archived
@@ -431,15 +428,13 @@ SKU,Status
 906126-SC,archived
 906204-SC,archived
 906747-SC,archived
-907192-SC,archived
+906981-SC,archived
 907395-SC,archived
 907769-SC,archived
-907775-SC,archived
 907932-SC,archived
 908255-SC,archived
 909108-SC,archived
 909304-SC,archived
-910087-SC,archived
 910759-SC,archived
 910826-SC,archived
 911293-SC,archived
@@ -460,7 +455,6 @@ SKU,Status
 917345-SC,archived
 917713-SC,archived
 918589-SC,archived
-918655-SC,archived
 919091-SC,archived
 920690-SC,archived
 920694-SC,archived
@@ -472,6 +466,7 @@ SKU,Status
 925830-SC,archived
 926081-SC,archived
 926390-SC,archived
+926392-SC,archived
 926393-SC,archived
 926394-SC,archived
 927966-SC,archived
@@ -487,6 +482,7 @@ SKU,Status
 936831-SC,archived
 936948-SC,archived
 938707-SC,archived
+939404-SC,archived
 939759-SC,archived
 941449-SC,archived
 942834-SC,archived
