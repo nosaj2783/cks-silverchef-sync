@@ -1,9 +1,9 @@
 {
- "run_utc": "2026-11-15T16:58:33.220703+00:00",
- "feed_items": 2322,
- "previous_items": 2323,
- "update_rows": 2322,
- "archive_rows": 451,
+ "run_utc": "2026-11-15T21:40:45.543487+00:00",
+ "feed_items": 2321,
+ "previous_items": 2322,
+ "update_rows": 2321,
+ "archive_rows": 452,
  "frozen_sold_out_on_cks": [],
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 1928,
@@ -15,6 +15,7 @@
   "796597-SC",
   "799443-SC",
   "821321-SC",
+  "834408-SC",
   "835781-SC",
   "844836-SC",
   "846366-SC",
@@ -30,6 +31,6 @@
  ],
  "baseline_run": false,
  "skipped_bad_rows": [],
- "on_sale": 404,
+ "on_sale": 403,
  "storefront": true
 }
