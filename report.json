@@ -1,9 +1,9 @@
 {
- "run_utc": "2026-11-17T13:08:05.009618+00:00",
+ "run_utc": "2026-11-17T22:11:39.564513+00:00",
  "feed_items": 2309,
- "previous_items": 2305,
+ "previous_items": 2309,
  "update_rows": 2309,
- "archive_rows": 504,
+ "archive_rows": 501,
  "frozen_sold_out_on_cks": [],
  "cks_storefront": "ok",
  "cks_sc_variants_seen": 1910,
