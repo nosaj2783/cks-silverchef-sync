@@ -7,7 +7,6 @@ SKU,Status
 752722-SC,archived
 755187-SC,archived
 755501-SC,archived
-757459-SC,archived
 759496-SC,archived
 761413-SC,archived
 762373-SC,archived
@@ -221,6 +220,7 @@ SKU,Status
 851311-SC,archived
 851478-SC,archived
 852116-SC,archived
+852319-SC,archived
 852579-SC,archived
 853232-SC,archived
 853374-SC,archived
@@ -245,10 +245,10 @@ SKU,Status
 856450-SC,archived
 857077-SC,archived
 857667-SC,archived
+857978-SC,archived
 858052-SC,archived
 858053-SC,archived
 858091-SC,archived
-858401-SC,archived
 858559-SC,archived
 858736-SC,archived
 858952-SC,archived
@@ -373,7 +373,6 @@ SKU,Status
 883867-SC,archived
 884053-SC,archived
 884267-SC,archived
-884437-SC,archived
 885293-SC,archived
 885335-SC,archived
 885408-SC,archived
@@ -390,7 +389,6 @@ SKU,Status
 890386-SC,archived
 890583-SC,archived
 890828-SC,archived
-891056-SC,archived
 891095-SC,archived
 891205-SC,archived
 891455-SC,archived
@@ -484,7 +482,6 @@ SKU,Status
 916851-SC,archived
 916915-SC,archived
 916941-SC,archived
-917345-SC,archived
 918297-SC,archived
 918663-SC,archived
 919091-SC,archived
